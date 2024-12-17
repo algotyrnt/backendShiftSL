@@ -64,7 +64,7 @@ Follow these steps to set up the backend server:
 
 1. **Clone the Repository**
    ```bash  
-   git clone https://github.com/your-username/shiftsl-backend.git  
+   git clone https://github.com/ShiftSL/backend.git  
    cd shiftsl-backend  
    ```  
 
