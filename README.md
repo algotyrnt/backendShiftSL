@@ -92,7 +92,6 @@ Follow these steps to set up the backend server:
 
 5. **Access the Backend**
     - Default Port: `http://localhost:8080`
-    - API Documentation (Swagger): `http://localhost:8080/swagger-ui.html`
 
 ---
 
@@ -102,9 +101,6 @@ Follow these steps to set up the backend server:
 |--------|------------------------------|--------------------------------------------|  
 | POST   | `/api/auth/register`         | Register a new user (Admin/Staff)          |  
 | POST   | `/api/auth/login`            | User login and authentication              |  
-
-
-Refer to **Swagger UI** for complete API documentation.
 
 ---
 
