@@ -1,11 +1,10 @@
 package com.shiftsl.shiftslbackend.controller;
 
-import com.shiftsl.shiftslbackend.model.LoginRequest;
+import com.shiftsl.shiftslbackend.request.CreateUserRequest;
+import com.shiftsl.shiftslbackend.request.LoginRequest;
 import com.shiftsl.shiftslbackend.model.LoginResponse;
-import com.shiftsl.shiftslbackend.model.User;
 import com.shiftsl.shiftslbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,40 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-    @PostMapping("/create/hr-admin")
-    public HttpStatus createHrAdmin(@RequestBody CreateUserRequest createUserRequest) {
+    @PostMapping("/create")
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequest request) {
         try {
-            // Create an HR Admin user
-            userService.createUser(createUserRequest.getEmail(), createUserRequest.getPassword(), User.Role.HR_ADMIN);
-            return HttpStatus.CREATED;  // HR Admin created successfully
+            userService.createUser(request.getEmail(), request.getPassword(), request.getName(), request.getRole());
+            return ResponseEntity.ok("User created successfully and saved to Firestore!");
         } catch (Exception e) {
-            System.err.println("Error creating HR Admin: " + e.getMessage());
-            return HttpStatus.INTERNAL_SERVER_ERROR;  // If an error occurs while creating the user
-        }
-    }
-
-    @PostMapping("/create/ward-admin")
-    public HttpStatus createWardAdmin(@RequestBody CreateUserRequest createUserRequest) {
-        try {
-            // Create a Ward Admin user
-            userService.createUser(createUserRequest.getEmail(), createUserRequest.getPassword(), User.Role.WARD_ADMIN);
-            return HttpStatus.CREATED;  // Ward Admin created successfully
-        } catch (Exception e) {
-            System.err.println("Error creating Ward Admin: " + e.getMessage());
-            return HttpStatus.INTERNAL_SERVER_ERROR;  // If an error occurs while creating the user
-        }
-    }
-
-    @PostMapping("/create/med-staff")
-    public HttpStatus createMedStaff(@RequestBody CreateUserRequest createUserRequest) {
-        try {
-            // Create a Medical Staff user
-            userService.createUser(createUserRequest.getEmail(), createUserRequest.getPassword(), User.Role.MED_STAFF);
-            return HttpStatus.CREATED;  // Medical Staff created successfully
-        } catch (Exception e) {
-            System.err.println("Error creating Medical Staff: " + e.getMessage());
-            return HttpStatus.INTERNAL_SERVER_ERROR;  // If an error occurs while creating the user
+            return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
         }
     }
 

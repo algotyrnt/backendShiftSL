@@ -1,11 +1,12 @@
 package com.shiftsl.shiftslbackend.service;
 
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.shiftsl.shiftslbackend.exception.AuthException;
 import com.shiftsl.shiftslbackend.model.User;
-import com.shiftsl.shiftslbackend.repository.UserRepository;
+import com.shiftsl.shiftslbackend.repository.FirestoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +14,21 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private FirestoreRepository firestoreRepository;
 
-    public void createUser(String email, String password, User.Role role) throws Exception {
+    public void createUser(String email, String password, String name, String role) throws Exception {
+        // Create the user in Firebase Authentication
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                 .setEmail(email)
                 .setPassword(password);
 
-        // Create user in Firebase
         UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
 
-        User newUser = new User();
-        newUser.setId(userRecord.getUid());
-        newUser.setEmail(email);
-        newUser.setRole(role);
-        userRepository.save(newUser);
+        // Save user details in Firestore
+        User user = new User(userRecord.getUid(), email, name, role);
+        WriteResult result = firestoreRepository.saveUser(user).get(); // Firestore write operation
+
+        System.out.println("User saved to Firestore at: " + result.getUpdateTime());
     }
 
     public String authenticate(String email, String password) {
