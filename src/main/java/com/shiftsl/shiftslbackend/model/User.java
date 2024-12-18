@@ -17,8 +17,7 @@ import lombok.Setter;
 public class User {
 
     @Id
-    private String id;  // Firebase UID
-
+    private String id;
     private String name;
     private String email;
 
@@ -28,6 +27,6 @@ public class User {
     public enum Role {
         HR_ADMIN,
         WARD_ADMIN,
-        STAFF
+        MED_STAFF
     }
 }

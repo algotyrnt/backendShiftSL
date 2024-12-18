@@ -26,7 +26,7 @@ public class FirebaseUserService {
         User newUser = new User();
         newUser.setId(userRecord.getUid());
         newUser.setEmail(email);
-        newUser.setRole(role);  // Assign the HR_ADMIN role
+        newUser.setRole(role);
         userRepository.save(newUser);
 
         return userRecord;

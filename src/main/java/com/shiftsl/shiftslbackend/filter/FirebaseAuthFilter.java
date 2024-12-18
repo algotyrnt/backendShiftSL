@@ -14,8 +14,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-@Component  // Ensure this class is recognized by Spring
-@Slf4j  // Lombok logger
+@Component
+@Slf4j
 public class FirebaseAuthFilter extends OncePerRequestFilter {
 
     @Autowired
