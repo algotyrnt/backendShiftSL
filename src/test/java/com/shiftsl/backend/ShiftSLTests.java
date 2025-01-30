@@ -1,10 +1,10 @@
-package com.shiftsl.shiftslbackend;
+package com.shiftsl.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ShiftSLbackendApplicationTests {
+class ShiftSLTests {
 
 	@Test
 	void contextLoads() {
