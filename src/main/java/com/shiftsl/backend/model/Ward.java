@@ -5,16 +5,15 @@ import lombok.Data;
 
 @Entity
 @Data
-public class User {
-
+public class Ward {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstName;
-    private String lastName;
 
-    private String phoneNo;
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    // HR Admin assigns a Ward Admin to this ward
+    @OneToOne
+    @JoinColumn(name = "wardAdminId")
+    private User wardAdmin;
 }
