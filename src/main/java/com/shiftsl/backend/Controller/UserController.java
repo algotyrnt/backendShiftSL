@@ -3,7 +3,6 @@ package com.shiftsl.backend.Controller;
 import com.shiftsl.backend.Service.UserService;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
-import com.shiftsl.backend.model.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,8 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody User user) {
-        UserDTO savedUser = userService.registerUser(user);
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User savedUser = userService.registerUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 

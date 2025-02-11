@@ -3,7 +3,6 @@ package com.shiftsl.backend.Service;
 import com.shiftsl.backend.Exceptions.UserNotFoundException;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
-import com.shiftsl.backend.model.UserDTO;
 import com.shiftsl.backend.repo.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,11 @@ public class UserService {
 
     private final UserRepo userRepo;
 
-    public UserDTO registerUser(User user) {
-        if (userRepo.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already in use.");
+    public User registerUser(User user) {
+        if (userRepo.findByPhoneNo(user.getPhoneNo()).isPresent()) {
+            throw new RuntimeException("Phone No. already in use.");
         }
-        // Encrypt password must be implemented
-        User savedUser = userRepo.save(user);
-        return new UserDTO(savedUser.getId(), savedUser.getFirstName(), savedUser.getLastName(), savedUser.getEmail());
+        return userRepo.save(user);
     }
 
     public User getUserById(Long userId) {
