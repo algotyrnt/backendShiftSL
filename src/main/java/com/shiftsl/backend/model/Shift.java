@@ -23,4 +23,6 @@ public class Shift {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private User doctor;
+
+    private boolean isShiftAvailable = false; // Shift available for other doctors to claim
 }
