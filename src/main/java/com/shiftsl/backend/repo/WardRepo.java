@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface WardRepo extends JpaRepository<Ward, Long> {
-
     Optional<Ward> findByName(String name);
 }
