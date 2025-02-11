@@ -3,12 +3,13 @@ package com.shiftsl.backend.Controller;
 import com.shiftsl.backend.Service.UserService;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
+import com.shiftsl.backend.model.UserDTO;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -19,14 +20,27 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.registerUser(user));
+    public ResponseEntity<UserDTO> registerUser(@RequestBody User user) {
+        UserDTO savedUser = userService.registerUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 
     // Get user by ID
     @GetMapping("/{userId}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    // Update user by ID
+    @PutMapping("/{userId}")
+    public ResponseEntity<User> updateUserById(@PathVariable Long userId, @RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUserById(userId, user));
+    }
+
+    // Delete user by ID
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.deleteUserById(userId));
     }
 
     // Get users by role (HR_ADMIN, WARD_ADMIN, DOCTOR)
