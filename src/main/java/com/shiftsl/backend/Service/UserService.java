@@ -17,7 +17,7 @@ public class UserService {
 
     public User registerUser(User user) {
         if (userRepo.findByPhoneNo(user.getPhoneNo()).isPresent()) {
-            throw new RuntimeException("Phone No. already in use.");
+            throw new RuntimeException("Phone Number already in use.");
         }
         return userRepo.save(user);
     }
