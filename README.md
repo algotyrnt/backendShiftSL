@@ -49,4 +49,3 @@ For any queries, contact the team:
 
 - **Project Team**: ShiftSL
 - **Email**: info@shiftsl.com
-"""
