@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shift")
+@RequestMapping("/api/shift")
 @AllArgsConstructor
 public class ShiftController {
 
