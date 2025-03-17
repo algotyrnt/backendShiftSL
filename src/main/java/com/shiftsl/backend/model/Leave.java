@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "doc_leave")
 public class Leave {
 
     @Id

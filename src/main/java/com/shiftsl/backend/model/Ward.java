@@ -14,6 +14,5 @@ public class Ward {
 
     // HR Admin assigns a Ward Admin to this ward
     @OneToOne
-    @JoinColumn(name = "ward_admin_id")
     private User wardAdmin;
 }

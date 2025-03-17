@@ -24,7 +24,7 @@ public class ShiftService {
         User doctor = userRepo.findById(doctorId)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        shift.setDoctor(doctor);
+
         return shiftRepo.save(shift);
     }
 
@@ -46,7 +46,6 @@ public class ShiftService {
             throw new RuntimeException("Shift is not available in the shift pool");
         }
 
-        shift.setDoctor(doctor);
         shift.setShiftAvailable(false);
         shiftRepo.save(shift);
     }
