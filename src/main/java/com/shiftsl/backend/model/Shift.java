@@ -15,6 +15,8 @@ public class Shift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int noOfDoctors;
+
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
@@ -28,7 +30,4 @@ public class Shift {
 
     @BooleanFlag
     private boolean shiftAvailable; // Shift available for other doctors to claim
-
-    @BooleanFlag
-    private boolean shiftAssigned;
 }
