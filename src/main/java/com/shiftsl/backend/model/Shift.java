@@ -27,4 +27,7 @@ public class Shift {
 
     @BooleanFlag
     private boolean shiftAvailable; // Shift available for other doctors to claim
+
+    @BooleanFlag
+    private boolean shiftAssigned;
 }
