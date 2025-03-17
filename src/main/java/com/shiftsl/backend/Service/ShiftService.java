@@ -1,5 +1,7 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.DTO.ShiftDTO;
+import com.shiftsl.backend.Exceptions.DoctorCountExceededException;
 import com.shiftsl.backend.Exceptions.ShiftNotFoundException;
 import com.shiftsl.backend.model.Shift;
 import com.shiftsl.backend.model.User;
@@ -9,21 +11,38 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ShiftService {
 
     private final ShiftRepo shiftRepo;
-    private final UserRepo userRepo;
+    private final UserService userService;
 
     // Ward Admin creates a shift and assigns a doctor
     @Transactional
-    public Shift createShift(Long wardAdminId, Shift shift, Long doctorId) {
-        User doctor = userRepo.findById(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+    public Shift createShift(ShiftDTO shiftDTO) {
+        Shift shift = new Shift();
+        shift.setNoOfDoctors(shiftDTO.noOfDoctors());
+        shift.setStartTime(shiftDTO.startTime());
+        shift.setEndTime(shiftDTO.endTime());
 
+        // Fetch doctors using Streams
+        Set<User> doctors = shiftDTO.doctorIds().stream()
+                .map(userService::getUserById)
+                .collect(Collectors.toSet());
+
+        // Ensure the doctor count does not exceed the allowed limit
+        if (doctors.size() > shiftDTO.noOfDoctors()) {
+            throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");
+        }
+
+        shift.setDoctors(doctors);
+        shift.setShiftAvailable(doctors.size() < shiftDTO.noOfDoctors());
 
         return shiftRepo.save(shift);
     }
@@ -36,18 +55,7 @@ public class ShiftService {
     // Doctor claims a shift from the shift pool
     @Transactional
     public void claimShift(Long doctorId, Long shiftId) {
-        Shift shift = shiftRepo.findById(shiftId)
-                .orElseThrow(() -> new RuntimeException("Shift not found"));
-
-        User doctor = userRepo.findById(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-
-        if (!shift.isShiftAvailable()) {
-            throw new RuntimeException("Shift is not available in the shift pool");
-        }
-
-        shift.setShiftAvailable(false);
-        shiftRepo.save(shift);
+        //to do
     }
 
     public Shift getShiftByID(Long shiftID){

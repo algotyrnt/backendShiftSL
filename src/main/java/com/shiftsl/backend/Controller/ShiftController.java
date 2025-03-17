@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Controller;
 
+import com.shiftsl.backend.DTO.ShiftDTO;
 import com.shiftsl.backend.Service.ShiftService;
 import com.shiftsl.backend.model.Shift;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,9 @@ public class ShiftController {
     private final ShiftService shiftService;
 
     // Ward Admin creates a shift and assigns a doctor
-    @PostMapping("/create/{wardAdminId}/{doctorId}")
-    public ResponseEntity<Shift> createShift(
-            @PathVariable Long wardAdminId,
-            @RequestBody Shift shift,
-            @PathVariable Long doctorId) {
-        Shift createdShift = shiftService.createShift(wardAdminId, shift, doctorId);
-        return new ResponseEntity<>(createdShift, HttpStatus.OK);
+    @PostMapping("/create")
+    public ResponseEntity<Shift> createShift(@RequestBody ShiftDTO shift) {
+        return new ResponseEntity<>(shiftService.createShift(shift), HttpStatus.OK);
     }
 
     // Get all available shifts in the shift pool
@@ -32,9 +29,9 @@ public class ShiftController {
         return ResponseEntity.ok(shiftService.getAvailableShifts());
     }
 
-    // Doctor claims a shift from the shift pool
+    // Doctor request a shift from the shift pool
     @PutMapping("/claim/{doctorId}/{shiftId}")
-    public ResponseEntity<String> claimShift(@PathVariable Long doctorId, @PathVariable Long shiftId) {
+    public ResponseEntity<String> requestShift(@PathVariable Long doctorId, @PathVariable Long shiftId) {
         shiftService.claimShift(doctorId, shiftId);
         return ResponseEntity.ok("Shift claimed successfully");
     }
