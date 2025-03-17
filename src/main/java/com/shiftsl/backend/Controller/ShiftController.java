@@ -26,13 +26,6 @@ public class ShiftController {
         return new ResponseEntity<>(createdShift, HttpStatus.OK);
     }
 
-    // Doctor requests leave for a shift
-    @PutMapping("/request-leave/{doctorId}/{shiftId}")
-    public ResponseEntity<String> requestLeave(@PathVariable Long doctorId, @PathVariable Long shiftId) {
-        shiftService.requestLeave(doctorId, shiftId);
-        return ResponseEntity.ok("Leave requested successfully");
-    }
-
     // Get all available shifts in the shift pool
     @GetMapping("/available")
     public ResponseEntity<List<Shift>> getAvailableShifts() {

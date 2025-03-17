@@ -14,6 +14,9 @@ public class Leave {
     @OneToOne
     private Shift shift;
 
+    @OneToOne
+    private User doctor;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 }

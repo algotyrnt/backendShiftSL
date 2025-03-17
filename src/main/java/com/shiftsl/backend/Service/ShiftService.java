@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.Exceptions.ShiftNotFoundException;
 import com.shiftsl.backend.model.Shift;
 import com.shiftsl.backend.model.User;
 import com.shiftsl.backend.repo.ShiftRepo;
@@ -27,21 +28,6 @@ public class ShiftService {
         return shiftRepo.save(shift);
     }
 
-    // Doctor requests leave for a shift
-    @Transactional
-    public void requestLeave(Long doctorId, Long shiftId) {
-        Shift shift = shiftRepo.findById(shiftId)
-                .orElseThrow(() -> new RuntimeException("Shift not found"));
-
-        if (!shift.getDoctor().getId().equals(doctorId)) {
-            throw new RuntimeException("Doctor is not assigned to this shift");
-        }
-
-        shift.setDoctor(null); // Remove assigned doctor
-        shift.setShiftAvailable(true); // Mark as available in shift pool
-        shiftRepo.save(shift);
-    }
-
     // Get all available shifts in the shift pool
     public List<Shift> getAvailableShifts() {
         return shiftRepo.findByShiftAvailable(true);
@@ -63,5 +49,9 @@ public class ShiftService {
         shift.setDoctor(doctor);
         shift.setShiftAvailable(false);
         shiftRepo.save(shift);
+    }
+
+    public Shift getShiftByID(Long shiftID){
+        return shiftRepo.findById(shiftID).orElseThrow(() -> new ShiftNotFoundException(shiftID));
     }
 }
