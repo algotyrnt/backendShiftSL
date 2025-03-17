@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Controller;
 
+import com.shiftsl.backend.DTO.UserDTO;
 import com.shiftsl.backend.Service.UserService;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
@@ -19,9 +20,8 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User savedUser = userService.registerUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    public ResponseEntity<User> registerUser(@RequestBody UserDTO user) {
+        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
     }
 
     // Get user by ID

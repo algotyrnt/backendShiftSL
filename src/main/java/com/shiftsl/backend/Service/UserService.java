@@ -1,5 +1,7 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.DTO.UserDTO;
+import com.shiftsl.backend.Exceptions.PhoneNoInUseException;
 import com.shiftsl.backend.Exceptions.UserNotFoundException;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
@@ -17,10 +19,17 @@ public class UserService {
     private final UserRepo userRepo;
 
     @Transactional
-    public User registerUser(User user) {
-        if (userRepo.findByPhoneNo(user.getPhoneNo()).isPresent()) {
-            throw new RuntimeException("Phone Number already in use.");
-        }
+    public User registerUser(UserDTO userDTO) {
+        userRepo.findByPhoneNo(userDTO.phoneNo()).ifPresent(user -> {
+            throw new PhoneNoInUseException("Phone Number already in use.");
+        });
+
+        User user = new User();
+        user.setFirstName(userDTO.firstName());
+        user.setLastName(userDTO.lastName());
+        user.setPhoneNo(userDTO.phoneNo());
+        user.setRole(userDTO.role());
+
         return userRepo.save(user);
     }
 
