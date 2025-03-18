@@ -30,6 +30,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
+    //TODO: GET mapping to get all users
+    @GetMapping("/get-all")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     // Update user by ID
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUserById(@PathVariable Long userId, @RequestBody User user) {

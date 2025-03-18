@@ -50,4 +50,8 @@ public class UserService {
         userRepo.deleteById(userId);
         return "User deleted successfully.";
     }
+
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
 }
