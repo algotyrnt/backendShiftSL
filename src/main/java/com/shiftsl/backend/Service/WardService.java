@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.Exceptions.WardNotFoundException;
 import com.shiftsl.backend.model.Ward;
 import com.shiftsl.backend.repo.WardRepo;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,10 @@ public class WardService {
 
     public Ward updateWard(Ward ward){
         return wardRepo.save(ward);
+    }
+
+    public Ward getWardByID(Long ID){
+        return wardRepo.findById(ID).orElseThrow(() -> new WardNotFoundException("Ward (ID - " + ID + " not found."));
     }
 
     public Optional<Ward> findByName(String name){
