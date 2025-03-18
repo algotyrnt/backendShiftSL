@@ -1,8 +1,9 @@
 package com.shiftsl.backend.Service;
 
 import com.shiftsl.backend.DTO.UserDTO;
-import com.shiftsl.backend.Exceptions.PhoneNoInUseException;
+import com.shiftsl.backend.Exceptions.PhoneNotInUseException;
 import com.shiftsl.backend.Exceptions.UserNotFoundException;
+import com.shiftsl.backend.Exceptions.UserNotUpdatedException;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
 import com.shiftsl.backend.repo.UserRepo;
@@ -21,7 +22,7 @@ public class UserService {
     @Transactional
     public User registerUser(UserDTO userDTO) {
         userRepo.findByPhoneNo(userDTO.phoneNo()).ifPresent(user -> {
-            throw new PhoneNoInUseException("Phone Number already in use.");
+            throw new PhoneNotInUseException("Phone Number already in use.");
         });
 
         User user = new User();
@@ -34,7 +35,7 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("User - (" + userId + ") not found."));
     }
 
     public List<User> getUsersByRole(Role role) {
@@ -42,8 +43,12 @@ public class UserService {
     }
 
     public User updateUserById(Long userId, User user) {
-        userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        return userRepo.save(user);
+        try {
+            getUserById(userId); //check whether the user exists or else throws UserNotFoundException
+            return userRepo.save(user);
+        } catch (UserNotFoundException e) {
+            throw new UserNotUpdatedException("User - (" + userId + ") not found to update details");
+        }
     }
 
     public String deleteUserById(Long userId) {
