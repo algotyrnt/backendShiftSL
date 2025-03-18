@@ -20,6 +20,9 @@ public class Shift {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    @ManyToOne
+    private Ward ward;
+
     @ManyToMany
     @JoinTable(
             name = "shift_doctors",
