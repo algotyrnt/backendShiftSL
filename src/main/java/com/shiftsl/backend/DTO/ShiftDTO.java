@@ -8,7 +8,6 @@ public record ShiftDTO(
         LocalDateTime startTime,
         LocalDateTime endTime,
         Long wardId,
-        Set<Long> doctorIds,
-        boolean shiftAvailable
+        Set<Long> doctorIds
 ) {
 }
