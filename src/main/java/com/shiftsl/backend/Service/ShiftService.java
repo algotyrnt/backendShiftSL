@@ -29,6 +29,7 @@ public class ShiftService {
         Shift shift = new Shift();
         shift.setStartTime(shiftDTO.startTime());
         shift.setEndTime(shiftDTO.endTime());
+        shift.setNoOfDoctors(shiftDTO.noOfDoctors());
 
         Ward ward = wardService.getWardByID(shiftDTO.wardId());
         shift.setWard(ward);
@@ -44,7 +45,7 @@ public class ShiftService {
         }
 
         shift.setDoctors(doctors);
-        shift.setShiftAvailable(doctors.size() < shiftDTO.noOfDoctors());
+        shift.setShiftAvailable(doctors.size() < shift.getNoOfDoctors());
 
         return shiftRepo.save(shift);
     }
@@ -57,10 +58,28 @@ public class ShiftService {
     // Doctor claims a shift from the shift pool
     @Transactional
     public void claimShift(Long doctorId, Long shiftId) {
-        //to do
+        try{
+            Shift shift = getShiftWithLock(shiftId);
+            User user = userService.getUserById(doctorId);
+
+            if(!shift.isShiftAvailable()){throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");}
+
+            Set<User> doctors = shift.getDoctors();
+            doctors.add(user);
+
+            shift.setShiftAvailable(doctors.size() < shift.getNoOfDoctors());
+
+            shiftRepo.save(shift);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Shift getShiftByID(Long shiftID){
         return shiftRepo.findById(shiftID).orElseThrow(() -> new ShiftNotFoundException("Shift ID - (" + shiftID + ") not found."));
+    }
+
+    public Shift getShiftWithLock(Long shiftID){
+        return shiftRepo.findShiftWithLock(shiftID).orElseThrow(() -> new ShiftNotFoundException("Shift ID - (" + shiftID + ") not found."));
     }
 }

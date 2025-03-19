@@ -35,4 +35,6 @@ public class ShiftController {
         shiftService.claimShift(doctorId, shiftId);
         return ResponseEntity.ok("Shift claimed successfully");
     }
+
+    //to do - shift swap, swap accept or reject
 }
