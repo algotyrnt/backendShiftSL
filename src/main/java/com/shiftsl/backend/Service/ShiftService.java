@@ -2,13 +2,18 @@ package com.shiftsl.backend.Service;
 
 import com.shiftsl.backend.DTO.ShiftDTO;
 import com.shiftsl.backend.Exceptions.DoctorCountExceededException;
+import com.shiftsl.backend.Exceptions.ShiftClaimFailedException;
 import com.shiftsl.backend.Exceptions.ShiftNotFoundException;
+import com.shiftsl.backend.Exceptions.UserNotFoundException;
 import com.shiftsl.backend.model.Shift;
 import com.shiftsl.backend.model.User;
 import com.shiftsl.backend.model.Ward;
 import com.shiftsl.backend.repo.ShiftRepo;
+import jakarta.persistence.LockTimeoutException;
+import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,8 +75,14 @@ public class ShiftService {
             shift.setShiftAvailable(doctors.size() < shift.getNoOfDoctors());
 
             shiftRepo.save(shift);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (UserNotFoundException e) {
+            throw new ShiftClaimFailedException("User not found to allocate the shift"+ e);
+        } catch (ShiftNotFoundException e){
+            throw new ShiftClaimFailedException("Shift not found to allocate the shift to the user"+ e);
+        } catch (LockTimeoutException e) {
+            throw new ShiftClaimFailedException("Shift is currently being updated by another user."+ e);
+        } catch (PessimisticLockException e) {
+            throw new ShiftClaimFailedException("System is experiencing high load."+ e);
         }
     }
 
