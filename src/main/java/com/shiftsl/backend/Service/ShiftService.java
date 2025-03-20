@@ -4,7 +4,7 @@ import com.shiftsl.backend.DTO.ShiftDTO;
 import com.shiftsl.backend.Exceptions.DoctorCountExceededException;
 import com.shiftsl.backend.Exceptions.ShiftClaimFailedException;
 import com.shiftsl.backend.Exceptions.ShiftNotFoundException;
-import com.shiftsl.backend.Exceptions.UserNotFoundException;
+import com.shiftsl.backend.Exceptions.ShiftsNotFoundException;
 import com.shiftsl.backend.model.Shift;
 import com.shiftsl.backend.model.User;
 import com.shiftsl.backend.model.Ward;
@@ -13,7 +13,6 @@ import jakarta.persistence.LockTimeoutException;
 import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class ShiftService {
         Shift shift = new Shift();
         shift.setStartTime(shiftDTO.startTime());
         shift.setEndTime(shiftDTO.endTime());
-        shift.setNoOfDoctors(shiftDTO.noOfDoctors());
+        shift.setTotalDoctors(shiftDTO.totalDoctors());
 
         Ward ward = wardService.getWardByID(shiftDTO.wardId());
         shift.setWard(ward);
@@ -44,45 +43,44 @@ public class ShiftService {
                 .map(userService::getUserById)
                 .collect(Collectors.toSet());
 
+        shift.setNoOfDoctors(doctors.size());
+
         //Ensure the doctor count does not exceed the allowed limit
-        if (doctors.size() > shiftDTO.noOfDoctors()) {
+        if (shift.getNoOfDoctors() > shift.getTotalDoctors()) {
             throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");
         }
 
         shift.setDoctors(doctors);
-        shift.setShiftAvailable(doctors.size() < shift.getNoOfDoctors());
 
         return shiftRepo.save(shift);
     }
 
     // Get all available shifts in the shift pool
     public List<Shift> getAvailableShifts() {
-        return shiftRepo.findByShiftAvailable(true);
+        return shiftRepo.findAvailableShifts();
     }
 
     // Doctor claims a shift from the shift pool
     @Transactional
     public void claimShift(Long doctorId, Long shiftId) {
-        try{
+        try {
             Shift shift = getShiftWithLock(shiftId);
             User user = userService.getUserById(doctorId);
 
-            if(!shift.isShiftAvailable()){throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");}
+            int sizeD = shift.getNoOfDoctors();
+
+            if (sizeD >= shift.getTotalDoctors()) {
+                throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");
+            }
 
             Set<User> doctors = shift.getDoctors();
             doctors.add(user);
-
-            shift.setShiftAvailable(doctors.size() < shift.getNoOfDoctors());
+            shift.setDoctors(doctors);
+            shift.setNoOfDoctors(++sizeD);
 
             shiftRepo.save(shift);
-        } catch (UserNotFoundException e) {
-            throw new ShiftClaimFailedException("User not found to allocate the shift"+ e);
-        } catch (ShiftNotFoundException e){
-            throw new ShiftClaimFailedException("Shift not found to allocate the shift to the user"+ e);
-        } catch (LockTimeoutException e) {
-            throw new ShiftClaimFailedException("Shift is currently being updated by another user."+ e);
-        } catch (PessimisticLockException e) {
-            throw new ShiftClaimFailedException("System is experiencing high load."+ e);
+        } catch (LockTimeoutException | PessimisticLockException e) {
+            throw new ShiftClaimFailedException("System is experiencing high load. Please try again later."+ e);
         }
     }
 
@@ -92,5 +90,14 @@ public class ShiftService {
 
     public Shift getShiftWithLock(Long shiftID){
         return shiftRepo.findShiftWithLock(shiftID).orElseThrow(() -> new ShiftNotFoundException("Shift ID - (" + shiftID + ") not found."));
+    }
+
+    public List<Shift> getShiftsForDoctor(Long doctorId) {
+        userService.getUserById(doctorId); //check whether the doctor exists or else throws UserNotFoundException
+        List<Shift> shifts = shiftRepo.findByDoctorId(doctorId);
+        if (shifts.isEmpty()) {
+            throw new ShiftsNotFoundException("No shifts found for doctor with ID " + doctorId);
+        }
+        return shifts;
     }
 }

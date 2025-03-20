@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public record ShiftDTO(
-        int noOfDoctors,
+        int totalDoctors,
         LocalDateTime startTime,
         LocalDateTime endTime,
         Long wardId,

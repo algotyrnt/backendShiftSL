@@ -36,5 +36,10 @@ public class ShiftController {
         return ResponseEntity.ok("Shift claimed successfully");
     }
 
+    @GetMapping("/{doctorId}")
+    public ResponseEntity<List<Shift>> getShiftsForDoctor(@PathVariable Long doctorId){
+        return ResponseEntity.ok(shiftService.getShiftsForDoctor(doctorId));
+    }
+
     //to do - shift swap, swap accept or reject
 }

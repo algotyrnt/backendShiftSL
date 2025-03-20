@@ -13,9 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface ShiftRepo extends JpaRepository<Shift, Long> {
-    List<Shift> findByShiftAvailable(boolean shiftAvailable);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Shift s WHERE s.id = :shiftID")
     Optional<Shift> findShiftWithLock(@Param("shiftID") Long shiftID);
+
+    @Query("SELECT s FROM Shift s JOIN s.doctors d WHERE d.id = :doctorId")
+    List<Shift> findByDoctorId(@Param("doctorId") Long doctorId);
+
+    @Query("SELECT s FROM Shift s WHERE s.noOfDoctors < s.totalDoctors")
+    List<Shift> findAvailableShifts();
 }
