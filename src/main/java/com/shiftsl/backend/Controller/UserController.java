@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Controller;
 
+import com.shiftsl.backend.DTO.UserDTO;
 import com.shiftsl.backend.Service.UserService;
 import com.shiftsl.backend.model.Role;
 import com.shiftsl.backend.model.User;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @AllArgsConstructor
 public class UserController {
 
@@ -19,15 +20,20 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User savedUser = userService.registerUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    public ResponseEntity<User> registerUser(@RequestBody UserDTO user) {
+        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
     }
 
     // Get user by ID
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    //TODO: GET mapping to get all users
+    @GetMapping("/get-all")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     // Update user by ID
