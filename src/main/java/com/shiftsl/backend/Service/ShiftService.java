@@ -29,13 +29,13 @@ public class ShiftService {
 
     // Ward Admin creates a shift and assigns a doctor
     @Transactional
-    public Shift createShift(ShiftDTO shiftDTO) {
+    public Shift createShift(ShiftDTO shiftDTO, Long wardID) {
         Shift shift = new Shift();
         shift.setStartTime(shiftDTO.startTime());
         shift.setEndTime(shiftDTO.endTime());
         shift.setTotalDoctors(shiftDTO.totalDoctors());
 
-        Ward ward = wardService.getWardByID(shiftDTO.wardId());
+        Ward ward = wardService.getWardByID(wardID);
         shift.setWard(ward);
 
         // Fetch doctors using Streams

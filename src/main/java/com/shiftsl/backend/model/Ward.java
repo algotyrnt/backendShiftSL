@@ -10,6 +10,7 @@ public class Ward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     // HR Admin assigns a Ward Admin to this ward

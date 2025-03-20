@@ -18,9 +18,9 @@ public class ShiftController {
     private final ShiftService shiftService;
 
     // Ward Admin creates a shift and assigns a doctor
-    @PostMapping("/create")
-    public ResponseEntity<Shift> createShift(@RequestBody ShiftDTO shift) {
-        return new ResponseEntity<>(shiftService.createShift(shift), HttpStatus.OK);
+    @PostMapping("/create/{wardID}")
+    public ResponseEntity<Shift> createShift(@RequestBody ShiftDTO shift, @PathVariable Long wardID) {
+        return new ResponseEntity<>(shiftService.createShift(shift, wardID), HttpStatus.OK);
     }
 
     // Get all available shifts in the shift pool
