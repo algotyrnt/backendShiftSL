@@ -15,6 +15,7 @@ public class Shift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int totalDoctors;
     private int noOfDoctors;
 
     private LocalDateTime startTime;
@@ -30,7 +31,4 @@ public class Shift {
             inverseJoinColumns = @JoinColumn(name = "user", referencedColumnName = "id")
     )
     private Set<User> doctors;
-
-    @BooleanFlag
-    private boolean shiftAvailable; // Shift available for other doctors to claim
 }
