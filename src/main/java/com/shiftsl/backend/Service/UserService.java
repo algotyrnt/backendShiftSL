@@ -47,7 +47,7 @@ public class UserService {
             getUserById(userId); //check whether the user exists or else throws UserNotFoundException
             return userRepo.save(user);
         } catch (UserNotFoundException e) {
-            throw new UserNotUpdatedException("User - (" + userId + ") not found to update details");
+            throw new UserNotUpdatedException("User not found to update details"+ e);
         }
     }
 
