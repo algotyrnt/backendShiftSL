@@ -18,9 +18,9 @@ public class WardController {
     private final WardService wardService;
 
     // Create a new ward
-    @PostMapping("/create/{wardAdminID}/{wardAdminName}")
-    public ResponseEntity<Ward> createWard(@PathVariable Long wardAdminID, @PathVariable String wardAdminName) {
-        return ResponseEntity.ok(wardService.createWard(wardAdminID, wardAdminName));
+    @PostMapping("/create/{wardAdminID}/{wardName}")
+    public ResponseEntity<Ward> createWard(@PathVariable Long wardAdminID, @PathVariable String wardName) {
+        return ResponseEntity.ok(wardService.createWard(wardAdminID, wardName));
     }
 
     // Update an existing ward
