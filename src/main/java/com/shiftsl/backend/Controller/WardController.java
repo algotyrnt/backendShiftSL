@@ -3,7 +3,6 @@ package com.shiftsl.backend.Controller;
 import com.shiftsl.backend.Service.WardService;
 import com.shiftsl.backend.model.Ward;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +17,9 @@ public class WardController {
     private final WardService wardService;
 
     // Create a new ward
-    @PostMapping("/create/{wardAdminID}/{wardAdminName}")
-    public ResponseEntity<Ward> createWard(@PathVariable Long wardAdminID, @PathVariable String wardAdminName) {
-        return ResponseEntity.ok(wardService.createWard(wardAdminID, wardAdminName));
+    @PostMapping("/create/{wardAdminID}/{wardName}")
+    public ResponseEntity<Ward> createWard(@PathVariable Long wardAdminID, @PathVariable String wardName) {
+        return ResponseEntity.ok(wardService.createWard(wardAdminID, wardName));
     }
 
     // Update an existing ward
@@ -31,7 +30,7 @@ public class WardController {
     }
 
     // Get a ward by name
-    @GetMapping("/name/{name}")
+    @GetMapping("/{name}")
     public ResponseEntity<Optional<Ward>> getWardByName(@PathVariable String name) {
         return ResponseEntity.ok(wardService.findByName(name));
     }

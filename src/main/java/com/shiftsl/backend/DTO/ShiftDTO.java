@@ -7,7 +7,6 @@ public record ShiftDTO(
         int totalDoctors,
         LocalDateTime startTime,
         LocalDateTime endTime,
-        Long wardId,
         Set<Long> doctorIds
 ) {
 }
