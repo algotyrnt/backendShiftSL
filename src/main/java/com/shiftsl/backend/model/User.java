@@ -16,6 +16,8 @@ public class User {
     @Column(unique = true)
     private String phoneNo;
 
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 }
