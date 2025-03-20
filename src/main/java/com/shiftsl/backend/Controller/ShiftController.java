@@ -41,5 +41,10 @@ public class ShiftController {
         return ResponseEntity.ok(shiftService.getShiftsForDoctor(doctorId));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Shift>> getAllShifts(){
+        return ResponseEntity.ok(shiftService.getAllShifts());
+    }
+
     //to do - shift swap, swap accept or reject
 }

@@ -100,4 +100,8 @@ public class ShiftService {
         }
         return shifts;
     }
+
+    public List<Shift> getAllShifts() {
+        return shiftRepo.findAll();
+    }
 }
