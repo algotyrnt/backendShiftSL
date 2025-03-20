@@ -1,6 +1,9 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.Exceptions.NotAWardAdminException;
 import com.shiftsl.backend.Exceptions.WardNotFoundException;
+import com.shiftsl.backend.model.Role;
+import com.shiftsl.backend.model.User;
 import com.shiftsl.backend.model.Ward;
 import com.shiftsl.backend.repo.WardRepo;
 import lombok.AllArgsConstructor;
@@ -14,8 +17,17 @@ import java.util.Optional;
 public class WardService {
 
     private final WardRepo wardRepo;
+    private final UserService userService;
 
-    public Ward createWard(Ward ward){
+    public Ward createWard(Long wardAdminID, String wardName){
+        Ward ward = new Ward();
+        User wardAdmin = userService.getUserById(wardAdminID);
+        if(!wardAdmin.getRole().equals(Role.WARD_ADMIN)){
+            throw new NotAWardAdminException("Given user is not a ward admin");
+        }
+        ward.setWardAdmin(wardAdmin);
+
+        ward.setName(wardName);
         return wardRepo.save(ward);
     }
 
