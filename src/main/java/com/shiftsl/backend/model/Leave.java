@@ -12,6 +12,11 @@ public class Leave {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
 
+    @Enumerated(EnumType.STRING)
+    private LeaveType type;
+
+    private String cause;
+
     @OneToOne
     private Shift shift;
 
