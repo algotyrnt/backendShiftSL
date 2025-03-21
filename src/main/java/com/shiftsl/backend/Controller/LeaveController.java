@@ -21,12 +21,12 @@ public class LeaveController {
         return ResponseEntity.ok(leaveService.requestLeave(leaveDTO));
     }
 
-    @PutMapping("/{leaveID}/approve")
+    @PutMapping("/approve/{leaveID}")
     public ResponseEntity<String> approveLeave(@PathVariable Long leaveID){
         return ResponseEntity.ok(leaveService.approve(leaveID));
     }
 
-    @PutMapping("/{leaveID}/reject")
+    @PutMapping("/reject/{leaveID}")
     public ResponseEntity<String> rejectLeave(@PathVariable Long leaveID){
         return ResponseEntity.ok(leaveService.reject(leaveID));
     }
