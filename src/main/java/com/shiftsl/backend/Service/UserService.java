@@ -28,6 +28,7 @@ public class UserService {
         User user = new User();
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
+        user.setFirebaseUid(userDTO.uid());
         user.setEmail(userDTO.email());
         user.setPhoneNo(userDTO.phoneNo());
         user.setRole(userDTO.role());
@@ -55,6 +56,10 @@ public class UserService {
     public String deleteUserById(Long userId) {
         userRepo.deleteById(userId);
         return "User deleted successfully.";
+    }
+
+    public User findUserByFirebaseUid(String uid) {
+        return userRepo.findByFirebaseUid(uid).orElseThrow();
     }
 
     public List<User> getAllUsers() {
