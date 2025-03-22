@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -26,19 +25,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
     private final FirebaseAuth firebaseAuth;
     private final UserService userService;
-
-    // List of paths that should skip this filter
-    private final List<String> swaggerPaths = Arrays.asList(
-            "/api/dev/swagger-ui/",
-            "/api/dev/api-docs/"
-    );
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getServletPath();
-        return swaggerPaths.stream().anyMatch(path::startsWith);
-    }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

@@ -9,16 +9,16 @@ import com.shiftsl.backend.Service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -36,7 +36,6 @@ public class SecurityConfig {
                     .setCredentials(GoogleCredentials.fromStream(
                             new ClassPathResource("serviceAccountKey.json").getInputStream()))
                     .build();
-
             return FirebaseApp.initializeApp(options);
         }
         return FirebaseApp.getInstance();
@@ -48,38 +47,45 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, FirebaseAuthenticationFilter authFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, FirebaseAuthenticationFilter firebaseFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/dev/swagger-ui/**", "/api/dev/api-docs/**").hasRole("SWAGGER_ADMIN")
+                        // Require Basic Auth for /api/dev/**
+                        .requestMatchers("/api/dev/**").authenticated()
+                        // Use Firebase Authentication for all other endpoints
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                // Add Firebase authentication filter only for non /api/dev/** endpoints
+                .addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class)
+                // Configure security for /api/dev/** separately
+                .securityMatcher("/api/dev/**")
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails swaggerAdmin = User.builder()
-                .username("shiftSL")
-                .password(passwordEncoder().encode("shiftSL2024"))
-                .roles("SWAGGER_ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(swaggerAdmin);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public FirebaseAuthenticationFilter firebaseAuthenticationFilter(FirebaseAuth firebaseAuth, UserService userService) {
         return new FirebaseAuthenticationFilter(firebaseAuth, userService);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new InMemoryUserDetailsManager(
+                User.withUsername("devUser")
+                        .password("{noop}dev_acc_shiftSL") // `{noop}` means no password encoding
+                        .roles("DEV")
+                        .build()
+        );
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+        return new ProviderManager(new DaoAuthenticationProvider() {{
+            setUserDetailsService(userDetailsService);
+        }});
     }
 }
