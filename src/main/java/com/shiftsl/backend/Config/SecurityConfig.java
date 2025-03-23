@@ -22,8 +22,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -49,18 +53,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, FirebaseAuthenticationFilter firebaseFilter) throws Exception {
         http
+                .cors(Customizer.withDefaults()) // Enable CORS
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Require Basic Auth for /api/dev/**
                         .requestMatchers("/api/dev/**").authenticated()
-                        // Use Firebase Authentication for all other endpoints
                         .anyRequest().authenticated()
                 )
-                // Add Firebase authentication filter only for non /api/dev/** endpoints
                 .addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class)
-                // Configure security for /api/dev/** separately
                 .securityMatcher("/api/dev/**")
                 .httpBasic(Customizer.withDefaults());
 
@@ -76,7 +77,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
                 User.withUsername("devUser")
-                        .password("{noop}dev_acc_shiftSL") // `{noop}` means no password encoding
+                        .password("{noop}dev_acc_shiftSL")
                         .roles("DEV")
                         .build()
         );
@@ -87,5 +88,17 @@ public class SecurityConfig {
         return new ProviderManager(new DaoAuthenticationProvider() {{
             setUserDetailsService(userDetailsService);
         }});
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*")); // Allow all origins
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*")); // Allow all headers
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }

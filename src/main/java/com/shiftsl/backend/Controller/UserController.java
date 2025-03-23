@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     // Register a new user
-    @PostMapping("/register")
+    @PostMapping()
     @PreAuthorize("hasAnyAuthority('HR_ADMIN')")
     public ResponseEntity<User> registerUser(@RequestBody UserDTO user) {
         return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
@@ -31,6 +31,12 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('HR_ADMIN', 'WARD_ADMIN', 'DOCTOR_PERM', 'DOCTOR_TEMP')")
     public ResponseEntity<User> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @GetMapping("/firebase/{userId}")
+    @PreAuthorize("hasAnyAuthority('HR_ADMIN', 'WARD_ADMIN', 'DOCTOR_PERM', 'DOCTOR_TEMP')")
+    public ResponseEntity<User> getUserByFirebaseId(@PathVariable String userId) {
+        return ResponseEntity.ok(userService.findUserByFirebaseUid(userId));
     }
 
     // Get all registered users
