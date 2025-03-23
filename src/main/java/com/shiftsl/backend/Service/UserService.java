@@ -18,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepo userRepo;
+    private final FirebaseAuthService firebaseAuthService;
 
     @Transactional
     public User registerUser(UserDTO userDTO) {
@@ -28,7 +29,7 @@ public class UserService {
         User user = new User();
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
-        user.setFirebaseUid(userDTO.uid());
+        user.setFirebaseUid(firebaseAuthService.createUser(userDTO.email()));
         user.setEmail(userDTO.email());
         user.setPhoneNo(userDTO.phoneNo());
         user.setRole(userDTO.role());
