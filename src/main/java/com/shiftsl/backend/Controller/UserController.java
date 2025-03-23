@@ -41,7 +41,7 @@ public class UserController {
 
     // Get all registered users
     @GetMapping("/get-all")
-    @PreAuthorize("hasAnyAuthority('HR_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('HR_ADMIN', 'WARD_ADMIN')")
     public ResponseEntity<List<User>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
