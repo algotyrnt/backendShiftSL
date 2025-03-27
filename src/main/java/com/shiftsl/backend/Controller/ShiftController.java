@@ -49,7 +49,7 @@ public class ShiftController {
 
     // Get all shifts
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('WARD_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('WARD_ADMIN', 'DOCTOR_PERM', 'DOCTOR_TEMP')")
     public ResponseEntity<List<Shift>> getAllShifts(){
         return ResponseEntity.ok(shiftService.getAllShifts());
     }
