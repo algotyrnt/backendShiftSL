@@ -104,4 +104,9 @@ public class ShiftService {
     public List<Shift> getAllShifts() {
         return shiftRepo.findAll();
     }
+
+    public void deleteShiftByID(Long shiftId) {
+        Shift shift = getShiftByID(shiftId);
+        shiftRepo.delete(shift);
+    }
 }

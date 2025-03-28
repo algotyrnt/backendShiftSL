@@ -54,5 +54,13 @@ public class ShiftController {
         return ResponseEntity.ok(shiftService.getAllShifts());
     }
 
+    // Delete a shift
+    @DeleteMapping("/{shiftId}")
+    @PreAuthorize("hasAnyAuthority('WARD_ADMIN')")
+    public ResponseEntity<ResponseStatus> deleteShiftByID(@PathVariable Long shiftId){
+        shiftService.deleteShiftByID(shiftId);
+        return ResponseEntity.noContent().build();
+    }
+
     //to do - shift swap, swap accept or reject
 }
