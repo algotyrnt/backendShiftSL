@@ -62,5 +62,12 @@ public class ShiftController {
         return ResponseEntity.noContent().build();
     }
 
+    // Update shift
+    @PutMapping()
+    @PreAuthorize("hasAnyAuthority('WARD_ADMIN')")
+    public ResponseEntity<Shift> updateShiftByID(@RequestBody Shift shift){
+        return ResponseEntity.ok(shiftService.updateShiftByID(shift));
+    }
+
     //to do - shift swap, swap accept or reject
 }

@@ -109,4 +109,9 @@ public class ShiftService {
         Shift shift = getShiftByID(shiftId);
         shiftRepo.delete(shift);
     }
+
+    public Shift updateShiftByID(Shift shift) {
+        getShiftByID(shift.getId());
+        return shiftRepo.save(shift);
+    }
 }
