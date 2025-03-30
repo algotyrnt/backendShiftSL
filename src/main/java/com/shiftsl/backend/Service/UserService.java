@@ -29,6 +29,7 @@ public class UserService {
         User user = new User();
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
+        user.setSlmcReg(userDTO.slmcReg());
         user.setFirebaseUid(firebaseAuthService.createUser(userDTO.email()));
         user.setEmail(userDTO.email());
         user.setPhoneNo(userDTO.phoneNo());

@@ -13,6 +13,8 @@ public class User {
     private String firstName;
     private String lastName;
 
+    private String slmcReg;
+
     @Column(unique = true, nullable = false)
     private String firebaseUid;
 
