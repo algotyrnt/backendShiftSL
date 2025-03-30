@@ -69,5 +69,12 @@ public class ShiftController {
         return ResponseEntity.ok(shiftService.updateShiftByID(shift));
     }
 
+    // Get Roster
+    @GetMapping("roster/{month}")
+    @PreAuthorize("hasAnyAuthority('WARD_ADMIN')")
+    public ResponseEntity<List<Shift>> getRoster(@PathVariable int month){
+        return ResponseEntity.ok(shiftService.getRoster(month));
+    }
+
     //to do - shift swap, swap accept or reject
 }

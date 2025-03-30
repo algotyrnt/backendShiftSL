@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -113,5 +115,30 @@ public class ShiftService {
     public Shift updateShiftByID(Shift shift) {
         getShiftByID(shift.getId());
         return shiftRepo.save(shift);
+    }
+
+    public List<Shift> getRoster(int month) {
+        // Ensure the month is valid (1-12)
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Invalid month. Please provide a value between 1 and 12.");
+        }
+
+        // Determine the year (assume current year by default)
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+
+        // If the selected month is ahead of the current month, assume it's from the previous year
+        if (month > today.getMonthValue()) {
+            year -= 1;
+        }
+
+        // Calculate start and end dates
+        LocalDate startDate = LocalDate.of(year, month, 21).minusMonths(1);
+        LocalDate endDate = LocalDate.of(year, month, 21);
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atStartOfDay();
+
+        return shiftRepo.findShiftsWithinPeriod(startDateTime, endDateTime);
     }
 }
