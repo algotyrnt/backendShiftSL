@@ -17,10 +17,10 @@ public class Leave {
 
     private String cause;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Shift shift;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User doctor;
 
     @Enumerated(EnumType.STRING)
