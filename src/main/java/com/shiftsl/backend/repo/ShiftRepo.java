@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Repository
 public interface ShiftRepo extends JpaRepository<Shift, Long> {
@@ -22,4 +23,7 @@ public interface ShiftRepo extends JpaRepository<Shift, Long> {
 
     @Query("SELECT s FROM Shift s WHERE s.noOfDoctors < s.totalDoctors")
     List<Shift> findAvailableShifts();
+
+    @Query("SELECT s FROM Shift s WHERE s.startTime >= :startDate AND s.startTime < :endDate")
+    List<Shift> findShiftsWithinPeriod(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
