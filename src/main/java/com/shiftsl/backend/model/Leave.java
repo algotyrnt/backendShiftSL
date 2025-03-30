@@ -17,10 +17,10 @@ public class Leave {
 
     private String cause;
 
-    @OneToOne
+    @ManyToOne
     private Shift shift;
 
-    @OneToOne
+    @ManyToOne
     private User doctor;
 
     @Enumerated(EnumType.STRING)
