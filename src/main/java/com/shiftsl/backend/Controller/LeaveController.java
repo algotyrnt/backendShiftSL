@@ -53,7 +53,7 @@ public class LeaveController {
     }
 
     //get all leaves for a doctor
-    @GetMapping("/{doctorID}")
+    @GetMapping("/byDoc/{doctorID}")
     @PreAuthorize("hasAnyAuthority('DOCTOR_PERM', 'DOCTOR_TEMP')")
     public ResponseEntity<List<Leave>> getLeaveByDoctor(@PathVariable Long doctorID){
         return ResponseEntity.ok(leaveService.getLeaveByDoctor(doctorID));
