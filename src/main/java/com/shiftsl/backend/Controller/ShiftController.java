@@ -76,5 +76,4 @@ public class ShiftController {
         return ResponseEntity.ok(shiftService.getRoster(month));
     }
 
-    //to do - shift swap, swap accept or reject
 }

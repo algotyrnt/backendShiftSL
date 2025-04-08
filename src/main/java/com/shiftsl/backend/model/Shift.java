@@ -1,7 +1,6 @@
 package com.shiftsl.backend.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.BooleanFlag;
 import lombok.Data;
 
 import java.time.LocalDateTime;
