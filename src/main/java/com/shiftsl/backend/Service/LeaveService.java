@@ -46,6 +46,7 @@ public class LeaveService {
         Set<User> doctors = shift.getDoctors();
         doctors.remove(leave.getDoctor());
         shift.setDoctors(doctors);
+        shift.setNoOfDoctors(doctors.size());
         shiftService.updateShiftByID(shift);
         leaveRepo.save(leave);
 
