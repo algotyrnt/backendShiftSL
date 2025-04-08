@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public List<User> getUsersByRole(Role role) {
-        return userRepo.findAll().stream().filter(user -> user.getRole().equals(role)).toList();
+        return userRepo.findByRoleIn(List.of(role));
     }
 
     public User updateUserById(Long userId, User user) {
@@ -66,5 +66,9 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepo.findAll();
+    }
+
+    public List<User> getDoctors() {
+        return userRepo.findByRoleIn(List.of(Role.DOCTOR_PERM, Role.DOCTOR_TEMP));
     }
 }
