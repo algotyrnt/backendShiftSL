@@ -40,10 +40,17 @@ public class UserController {
     }
 
     // Get all registered users
-    @GetMapping("/get-all")
-    @PreAuthorize("hasAnyAuthority('HR_ADMIN', 'WARD_ADMIN')")
+    @GetMapping()
+    @PreAuthorize("hasAnyAuthority('HR_ADMIN')")
     public ResponseEntity<List<User>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    // Get Doctors
+    @GetMapping("/role/doc")
+    @PreAuthorize("hasAnyAuthority('HR_ADMIN', 'WARD_ADMIN', 'DOCTOR_PERM', 'DOCTOR_TEMP')")
+    public ResponseEntity<List<User>> getDoctors() {
+        return ResponseEntity.ok(userService.getDoctors());
     }
 
     // Update user by ID
