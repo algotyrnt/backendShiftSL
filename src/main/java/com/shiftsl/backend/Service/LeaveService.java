@@ -61,4 +61,8 @@ public class LeaveService {
     public List<Leave> getLeaves() {
         return leaveRepo.findAll();
     }
+
+    public List<Leave> getLeaveByDoctor(Long doctorID) {
+        return leaveRepo.findByDoctorId(doctorID);
+    }
 }
