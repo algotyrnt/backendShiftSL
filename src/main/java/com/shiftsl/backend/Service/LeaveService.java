@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -40,6 +41,12 @@ public class LeaveService {
     public String approve(Long leaveID) {
         Leave leave = getLeave(leaveID);
         leave.setStatus(Status.APPROVED);
+
+        Shift shift = shiftService.getShiftWithLock(leave.getShift().getId());
+        Set<User> doctors = shift.getDoctors();
+        doctors.remove(leave.getDoctor());
+        shift.setDoctors(doctors);
+        shiftService.updateShiftByID(shift);
         leaveRepo.save(leave);
 
         return "leave request approved";
