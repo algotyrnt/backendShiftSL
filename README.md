@@ -26,11 +26,11 @@ You can access the **Swagger API Documentation** at the following locations:
 
 - **Development/Local Environment**:  
   If you're running the backend locally, the Swagger documentation is available at:  
-  `http://localhost:8080/swagger-ui/index.html`
+  `http://localhost:8080/api/dev/swagger-ui/index.html`
 
 - **Production Environment**:  
   For the live version of the API, the Swagger documentation can be accessed via:  
-  `****/swagger-ui/index.html`  
+  `****/api/dev/swagger-ui/index.html`  
   
 
 The Swagger UI provides an interactive interface that allows you to explore the available API endpoints, view request/response models, and test them directly.
