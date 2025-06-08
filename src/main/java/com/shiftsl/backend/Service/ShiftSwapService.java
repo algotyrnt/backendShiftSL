@@ -1,5 +1,6 @@
 package com.shiftsl.backend.Service;
 
+import com.shiftsl.backend.Exceptions.ShiftNotFoundException;
 import com.shiftsl.backend.model.Shift;
 import com.shiftsl.backend.model.ShiftSwap;
 import com.shiftsl.backend.model.StatusSwap;
@@ -32,7 +33,7 @@ public class ShiftSwapService {
     }
     
     public ShiftSwap getShiftSwap(Long swapID){
-        return shiftSwapRepo.findById(swapID).orElseThrow();
+        return shiftSwapRepo.findById(swapID).orElseThrow(() -> new ShiftNotFoundException("Shift swap " + swapID + "not found."));
     }
 
     public String accept(Long swapID) {
