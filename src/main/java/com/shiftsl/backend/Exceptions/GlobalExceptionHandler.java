@@ -17,6 +17,13 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Object> handleIllegalArgumentException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .body(ex.getMessage());
+    }
+
     // Not found exception handlers
     @ExceptionHandler({LeaveNotFoundException.class})
     public ResponseEntity<Object> handleLeaveNotFoundException(LeaveNotFoundException ex) {
