@@ -41,5 +41,5 @@ jobs:
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
-            --add-cloudsql-instances=shiftsl-453509:asia-south1:shiftsl \
+            --add-cloudsql-instances=${{ secrets.CLOUD_SQL_INSTANCE_NAME }} \
             --set-startup-probe-tcp-socket-port=8080 # Explicitly set TCP probe on 8080 (optional, as it's default)
