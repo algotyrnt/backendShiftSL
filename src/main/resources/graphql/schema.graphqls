@@ -9,6 +9,12 @@ type User {
   role: Role!
 }
 
+type Ward {
+    id: ID!
+    name: String
+    wardAdmin: User!
+}
+
 enum Role {
   HR_ADMIN
   WARD_ADMIN
