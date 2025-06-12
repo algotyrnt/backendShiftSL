@@ -15,3 +15,7 @@ enum Role {
   DOCTOR_PERM
   DOCTOR_TEMP
 }
+
+type Query {
+    user(id: ID!): User
+}
