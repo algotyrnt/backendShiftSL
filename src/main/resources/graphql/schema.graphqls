@@ -9,6 +9,12 @@ type User {
   role: Role!
 }
 
+type Ward {
+    id: ID!
+    name: String
+    wardAdmin: User!
+}
+
 enum Role {
   HR_ADMIN
   WARD_ADMIN
@@ -17,5 +23,13 @@ enum Role {
 }
 
 type Query {
-    user(id: ID!): User
+    # User Queries
+    users: [User!]! # List of non-null Users, and the list itself is non-null
+    userByID(id: ID!): User # Returns a single User by ID
+    userByRole(role: Role!): [User!]! # Returns a list of non-null Users by Role
+
+    # Ward Queries
+    wards: [Ward!]! # List of non-null Wards, and the list itself is non-null
+    wardById(id: ID!): Ward # Returns a single Ward by ID
+    wardByAdminId(wardAdminId: ID!): [Ward!]! # Returns a list of non-null Wards
 }
