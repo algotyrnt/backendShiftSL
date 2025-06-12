@@ -17,5 +17,7 @@ enum Role {
 }
 
 type Query {
-    user(id: ID!): User
+    users: [User]
+    userByID(id: ID!): User
+    userByRole(role: Role!): [User]
 }
