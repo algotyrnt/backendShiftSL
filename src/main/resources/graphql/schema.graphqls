@@ -23,13 +23,17 @@ enum Role {
 }
 
 type Query {
-    # User Queries
-    users: [User!]! # List of non-null Users, and the list itself is non-null
-    userByID(id: ID!): User # Returns a single User by ID
-    userByRole(role: Role!): [User!]! # Returns a list of non-null Users by Role
+    # Returns a list of all Users
+    users: [User!]! 
+    # Returns a single User by ID
+    userByID(id: ID!): User
+    # Returns a list of non-null Users by Role
+    userByRole(role: Role!): [User!]!
 
-    # Ward Queries
-    wards: [Ward!]! # List of non-null Wards, and the list itself is non-null
-    wardById(id: ID!): Ward # Returns a single Ward by ID
-    wardByAdminId(wardAdminId: ID!): [Ward!]! # Returns a list of non-null Wards
+    # Returns a list of all Wards
+    wards: [Ward!]!
+    # Returns a single Ward by ID
+    wardById(id: ID!): Ward
+    # Returns a list wards by ward admin ID
+    wardByAdminId(wardAdminId: ID!): [Ward!]!
 }
