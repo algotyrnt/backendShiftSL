@@ -15,6 +15,16 @@ type Ward {
     wardAdmin: User!
 }
 
+type Shift {
+    id: ID!
+    totalDoctors: Int!
+    noOfDoctors: Int!
+    startTime: String!
+    endTime: String!
+    ward: Ward!
+    doctors: [User!]!
+}
+
 enum Role {
   HR_ADMIN
   WARD_ADMIN
