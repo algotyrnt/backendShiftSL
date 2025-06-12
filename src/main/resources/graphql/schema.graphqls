@@ -26,4 +26,6 @@ type Query {
     users: [User]
     userByID(id: ID!): User
     userByRole(role: Role!): [User]
+    ward: [Ward]
+    wardById(id: ID!): Ward
 }
