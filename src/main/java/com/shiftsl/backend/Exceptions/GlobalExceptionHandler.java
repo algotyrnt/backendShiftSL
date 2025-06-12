@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<Object> handleIllegalArgumentException(Exception ex) {
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_ACCEPTABLE)
                 .body(ex.getMessage());
@@ -108,6 +108,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlePhoneAlreadyInUseException(PhoneAlreadyInUseException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler({LeaveNotSavedException.class})
+    public ResponseEntity<Object> handleLeaveNotSavedException(LeaveNotSavedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler({LeaveRetrievalException.class})
+    public ResponseEntity<Object> handleLeaveRetrievalException(LeaveRetrievalException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());
     }
 }
