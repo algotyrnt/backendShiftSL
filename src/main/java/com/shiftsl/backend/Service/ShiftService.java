@@ -96,7 +96,7 @@ public class ShiftService {
 
     public List<Shift> getShiftsForDoctor(Long doctorId) {
         userService.getUserById(doctorId); //check whether the doctor exists or else throws UserNotFoundException
-        List<Shift> shifts = shiftRepo.findByDoctorId(doctorId);
+        List<Shift> shifts = shiftRepo.findByDoctors_Id(doctorId);
         if (shifts.isEmpty()) {
             throw new ShiftsNotFoundException("No shifts found for doctor with ID " + doctorId);
         }
@@ -139,6 +139,6 @@ public class ShiftService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atStartOfDay();
 
-        return shiftRepo.findShiftsWithinPeriod(startDateTime, endDateTime);
+        return shiftRepo.findByStartTimeBetween(startDateTime, endDateTime);
     }
 }

@@ -18,12 +18,16 @@ public interface ShiftRepo extends JpaRepository<Shift, Long> {
     @Query("SELECT s FROM Shift s WHERE s.id = :shiftID")
     Optional<Shift> findShiftWithLock(@Param("shiftID") Long shiftID);
 
-    @Query("SELECT s FROM Shift s JOIN s.doctors d WHERE d.id = :doctorId")
-    List<Shift> findByDoctorId(@Param("doctorId") Long doctorId);
+    // @Query("SELECT s FROM Shift s JOIN s.doctors d WHERE d.id = :doctorId")
+    // List<Shift> findByDoctorId(@Param("doctorId") Long doctorId);
 
     @Query("SELECT s FROM Shift s WHERE s.noOfDoctors < s.totalDoctors")
     List<Shift> findAvailableShifts();
 
-    @Query("SELECT s FROM Shift s WHERE s.startTime >= :startDate AND s.startTime < :endDate")
-    List<Shift> findShiftsWithinPeriod(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    // @Query("SELECT s FROM Shift s WHERE s.startTime >= :startDate AND s.startTime < :endDate")
+    // List<Shift> findShiftsWithinPeriod(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    List<Shift> findByDoctors_Id(Long doctorId);
+
+    List<Shift> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 }
