@@ -1,0 +1,39 @@
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  slmcReg: String
+  firebaseUid: String!
+  phoneNo: String
+  email: String
+  role: Role!
+}
+
+type Ward {
+    id: ID!
+    name: String
+    wardAdmin: User!
+}
+
+enum Role {
+  HR_ADMIN
+  WARD_ADMIN
+  DOCTOR_PERM
+  DOCTOR_TEMP
+}
+
+type Query {
+    # Returns a list of all Users
+    users: [User!]! 
+    # Returns a single User by ID
+    userByID(id: ID!): User
+    # Returns a list of non-null Users by Role
+    userByRole(role: Role!): [User!]!
+
+    # Returns a list of all Wards
+    wards: [Ward!]!
+    # Returns a single Ward by ID
+    wardById(id: ID!): Ward
+    # Returns a list wards by ward admin ID
+    wardByAdminId(wardAdminId: ID!): [Ward!]!
+}
