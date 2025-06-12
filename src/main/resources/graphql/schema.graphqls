@@ -1,0 +1,17 @@
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  slmcReg: String
+  firebaseUid: String!
+  phoneNo: String
+  email: String
+  role: Role!
+}
+
+enum Role {
+  HR_ADMIN
+  WARD_ADMIN
+  DOCTOR_PERM
+  DOCTOR_TEMP
+}
