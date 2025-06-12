@@ -10,20 +10,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
 
+    @Column(unique = true)
     private String slmcReg;
 
     @Column(unique = true, nullable = false)
     private String firebaseUid;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phoneNo;
 
     @Column(unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 }

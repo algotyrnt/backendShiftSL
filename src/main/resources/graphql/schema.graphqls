@@ -1,10 +1,10 @@
 type User {
   id: ID!
   firstName: String
-  lastName: String
+  lastName: String!
   slmcReg: String
   firebaseUid: String!
-  phoneNo: String
+  phoneNo: String!
   email: String
   role: Role!
 }
