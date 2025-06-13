@@ -71,6 +71,6 @@ public class LeaveService {
     }
 
     public List<Leave> getLeaveByDoctor(Long doctorID) {
-        return leaveRepo.findByDoctors_Id(doctorID);
+        return leaveRepo.findByDoctorId(doctorID);
     }
 }

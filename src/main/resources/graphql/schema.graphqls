@@ -27,7 +27,7 @@ type Shift {
 
 type Leave {
   id: ID!
-  leaveType: LeaveType!
+  type: LeaveType!
   cause: String
   shift: Shift!
   doctor: User!
