@@ -25,6 +25,26 @@ type Shift {
   doctors: [User!]!
 }
 
+type Leave {
+  id: ID!
+  leaveType: LeaveType!
+  cause: String
+  shift: Shift!
+  doctor: User!
+  status: Status!
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeaveType {
+  CASUAL
+  SICK
+}
+
 enum Role {
   HR_ADMIN
   WARD_ADMIN
