@@ -33,5 +33,4 @@ public class UserController_GraphQL {
         return userService.getUsersByRole(role);
     }
 
-    
 }
