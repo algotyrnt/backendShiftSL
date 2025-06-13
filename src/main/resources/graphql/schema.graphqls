@@ -1,10 +1,10 @@
 type User {
   id: ID!
   firstName: String
-  lastName: String
+  lastName: String!
   slmcReg: String
   firebaseUid: String!
-  phoneNo: String
+  phoneNo: String!
   email: String
   role: Role!
 }
@@ -13,6 +13,16 @@ type Ward {
     id: ID!
     name: String
     wardAdmin: User!
+}
+
+type Shift {
+    id: ID!
+    totalDoctors: Int!
+    noOfDoctors: Int!
+    startTime: String!
+    endTime: String!
+    ward: Ward!
+    doctors: [User!]!
 }
 
 enum Role {
@@ -30,10 +40,17 @@ type Query {
     # Returns a list of non-null Users by Role
     userByRole(role: Role!): [User!]!
 
-    # Returns a list of all Wards
-    wards: [Ward!]!
-    # Returns a single Ward by ID
-    wardById(id: ID!): Ward
-    # Returns a list wards by ward admin ID
-    wardByAdminId(wardAdminId: ID!): [Ward!]!
+    # # Returns a list of all Wards
+    # wards: [Ward!]!
+    # # Returns a single Ward by ID
+    # wardById(id: ID!): Ward
+    # # Returns a list wards by ward admin ID
+    # wardByAdminId(wardAdminId: ID!): [Ward!]!
+
+    # # Returns a list of all shifts
+    # shifts: [Shift!]!
+    # # Returns a single shift by ID
+    # shiftByID(id: ID!): Shift
+    # # Returns a list of shifts by doctor ID
+    # shiftsByDoctorsID(doctorId: ID!): [Shift]!
 }
