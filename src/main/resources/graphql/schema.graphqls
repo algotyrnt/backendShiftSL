@@ -40,12 +40,10 @@ type Query {
     # Returns a list of non-null Users by Role
     userByRole(role: Role!): [User!]!
 
-    # # Returns a list of all Wards
-    # wards: [Ward!]!
-    # # Returns a single Ward by ID
-    # wardById(id: ID!): Ward
-    # # Returns a list wards by ward admin ID
-    # wardByAdminId(wardAdminId: ID!): [Ward!]!
+    # Returns a list of all Wards
+    wards: [Ward!]!
+    # Returns a single Ward by ID
+    wardById(id: ID!): Ward
 
     # # Returns a list of all shifts
     # shifts: [Shift!]!
