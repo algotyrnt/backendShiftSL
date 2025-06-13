@@ -6,14 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.graphql.data.GraphQlRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 
-@GraphQlRepository
+@Repository
 public interface ShiftRepo extends JpaRepository<Shift, Long> {
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Shift s WHERE s.id = :shiftID")
     Optional<Shift> findShiftWithLock(@Param("shiftID") Long shiftID);
@@ -30,4 +31,5 @@ public interface ShiftRepo extends JpaRepository<Shift, Long> {
     List<Shift> findByDoctors_Id(Long doctorId);
 
     List<Shift> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+    
 }
