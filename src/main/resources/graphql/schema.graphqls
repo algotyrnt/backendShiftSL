@@ -10,19 +10,19 @@ type User {
 }
 
 type Ward {
-    id: ID!
-    name: String
-    wardAdmin: User!
+  id: ID!
+  name: String
+  wardAdmin: User!
 }
 
 type Shift {
-    id: ID!
-    totalDoctors: Int!
-    noOfDoctors: Int!
-    startTime: String!
-    endTime: String!
-    ward: Ward!
-    doctors: [User!]!
+  id: ID!
+  totalDoctors: Int!
+  noOfDoctors: Int!
+  startTime: String!
+  endTime: String!
+  ward: Ward!
+  doctors: [User!]!
 }
 
 enum Role {
