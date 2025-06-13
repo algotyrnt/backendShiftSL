@@ -57,7 +57,7 @@ type Query {
   users: [User!]! 
   # Returns a single User by ID
   userByID(id: ID!): User
-  # Returns a list of non-null Users by Role
+  # Returns a list of Users by Role
   userByRole(role: Role!): [User!]!
 
   # Returns a list of all Wards
