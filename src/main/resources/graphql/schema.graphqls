@@ -45,10 +45,10 @@ type Query {
     # Returns a single Ward by ID
     wardById(id: ID!): Ward
 
-    # # Returns a list of all shifts
-    # shifts: [Shift!]!
-    # # Returns a single shift by ID
-    # shiftByID(id: ID!): Shift
-    # # Returns a list of shifts by doctor ID
-    # shiftsByDoctorsID(doctorId: ID!): [Shift]!
+    # Returns a list of all shifts
+    shifts: [Shift!]!
+    # Returns a single shift by ID
+    shiftByID(id: ID!): Shift
+    # Returns a list of shifts by doctor ID
+    shiftsByDoctorsID(id: ID!): [Shift]!
 }
