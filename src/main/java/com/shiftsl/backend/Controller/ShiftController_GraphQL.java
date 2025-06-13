@@ -32,4 +32,9 @@ public class ShiftController_GraphQL {
         return shiftService.getShiftsForDoctor(id);
     }
 
+    @QueryMapping
+    public List<Shift> shiftsAvailable(){
+        return shiftService.getAvailableShifts();
+    }
+
 }
