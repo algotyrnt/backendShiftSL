@@ -71,4 +71,11 @@ type Query {
     shiftByID(id: ID!): Shift
     # Returns a list of shifts by doctor ID
     shiftsByDoctorsID(id: ID!): [Shift]!
+
+    # Returns a list of all leaves
+    leaves: [Leave]!
+    # Returns a single leave by ID
+    leaveByID(id: ID!): Leave
+    # Returns a list of leaves by doctor ID
+    leavesByDoctorsID(id: ID!): [Leave]!
 }
