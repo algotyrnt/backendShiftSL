@@ -83,7 +83,7 @@ public class LeaveService {
 
             return "leave request rejected";
         } catch(Exception e) {
-            logger.error("Error while saving rejected Leave Request for LeaveID={}", leaveID, e);
+            logger.error("Error while trying to reject Leave Request for LeaveID={}", leaveID, e);
             throw new LeaveNotSavedException(String.format(
                     "Failed to update leave status in database for leaveId=%d", leaveID
             ));
