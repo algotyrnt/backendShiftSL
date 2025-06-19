@@ -183,7 +183,7 @@ public class ShiftService {
             LocalDateTime endDateTime = endDate.atStartOfDay();
 
 
-            return shiftRepo.findShiftsWithinPeriod(startDateTime, endDateTime);
+            return shiftRepo.findByStartTimeBetween(startDateTime, endDateTime);
         } catch (Exception e) {
             logger.error("Error occurred while trying to retrieve roster for month " + month);
             throw  new ShiftsNotFoundException("Unable to retrieve shifts for the given month from database");

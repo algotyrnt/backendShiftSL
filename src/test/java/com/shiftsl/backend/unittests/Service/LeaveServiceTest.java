@@ -60,7 +60,7 @@ public class LeaveServiceTest {
 
     private static Leave createLeave(Long id, LeaveType type, String cause, Shift shift, User doctor, Status status) {
         Leave leave = new Leave();
-        leave.setID(id);
+        leave.setId(id);
         leave.setType(type);
         leave.setCause(cause);
         leave.setShift(shift);
@@ -95,7 +95,7 @@ public class LeaveServiceTest {
         testShift.setId(2L);
 
         testLeave = new Leave();
-        testLeave.setID(ID);
+        testLeave.setId(ID);
         testLeave.setType(LeaveType.SICK);
         testLeave.setCause("fever");
         testLeave.setShift(testShift);
