@@ -10,7 +10,7 @@ public class Leave {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private LeaveType type;

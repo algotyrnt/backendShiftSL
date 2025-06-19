@@ -121,7 +121,7 @@ public class ShiftService {
     public List<Shift> getShiftsForDoctor(Long doctorId) {
         logger.info("Retrieving shifts for doctor {}", doctorId);
         userService.getUserById(doctorId); //check whether the doctor exists or else throws UserNotFoundException
-        List<Shift> shifts = shiftRepo.findByDoctorId(doctorId);
+        List<Shift> shifts = shiftRepo.findByDoctors_Id(doctorId);
         if (shifts.isEmpty()) {
             logger.info("No shift found for doctor " + doctorId);
             throw new ShiftsNotFoundException("No shifts found for doctor with ID " + doctorId);
@@ -182,10 +182,12 @@ public class ShiftService {
             LocalDateTime startDateTime = startDate.atStartOfDay();
             LocalDateTime endDateTime = endDate.atStartOfDay();
 
+
             return shiftRepo.findShiftsWithinPeriod(startDateTime, endDateTime);
         } catch (Exception e) {
             logger.error("Error occurred while trying to retrieve roster for month " + month);
             throw  new ShiftsNotFoundException("Unable to retrieve shifts for the given month from database");
         }
+
     }
 }

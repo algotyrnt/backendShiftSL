@@ -10,4 +10,5 @@ import java.util.List;
 public interface LeaveRepo extends JpaRepository<Leave, Long> {
 
     List<Leave> findByDoctorId(Long doctorId);
+    
 }

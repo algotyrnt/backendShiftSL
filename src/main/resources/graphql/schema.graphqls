@@ -1,18 +1,48 @@
 type User {
   id: ID!
   firstName: String
-  lastName: String
+  lastName: String!
   slmcReg: String
   firebaseUid: String!
-  phoneNo: String
+  phoneNo: String!
   email: String
   role: Role!
 }
 
 type Ward {
-    id: ID!
-    name: String
-    wardAdmin: User!
+  id: ID!
+  name: String
+  wardAdmin: User!
+}
+
+type Shift {
+  id: ID!
+  totalDoctors: Int!
+  noOfDoctors: Int!
+  startTime: String!
+  endTime: String!
+  ward: Ward!
+  doctors: [User!]!
+}
+
+type Leave {
+  id: ID!
+  type: LeaveType!
+  cause: String
+  shift: Shift!
+  doctor: User!
+  status: Status!
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeaveType {
+  CASUAL
+  SICK
 }
 
 enum Role {
@@ -23,17 +53,31 @@ enum Role {
 }
 
 type Query {
-    # Returns a list of all Users
-    users: [User!]! 
-    # Returns a single User by ID
-    userByID(id: ID!): User
-    # Returns a list of non-null Users by Role
-    userByRole(role: Role!): [User!]!
+  # Returns a list of all Users
+  users: [User!]! 
+  # Returns a single User by ID
+  userByID(id: ID!): User
+  # Returns a list of Users by Role
+  userByRole(role: Role!): [User!]!
 
-    # Returns a list of all Wards
-    wards: [Ward!]!
-    # Returns a single Ward by ID
-    wardById(id: ID!): Ward
-    # Returns a list wards by ward admin ID
-    wardByAdminId(wardAdminId: ID!): [Ward!]!
+  # Returns a list of all Wards
+  wards: [Ward!]!
+  # Returns a single Ward by ID
+  wardById(id: ID!): Ward
+
+  # Returns a list of all shifts
+  shifts: [Shift!]!
+  # Returns a single shift by ID
+  shiftByID(id: ID!): Shift
+  # Returns a list of shifts by doctor ID
+  shiftsByDoctorsID(id: ID!): [Shift]!
+  # Returns all available shifts
+  shiftsAvailable: [Shift]
+
+  # Returns a list of all leaves
+  leaves: [Leave]!
+  # Returns a single leave by ID
+  leaveByID(id: ID!): Leave
+  # Returns a list of leaves by doctor ID
+  leavesByDoctorsID(id: ID!): [Leave]!
 }
