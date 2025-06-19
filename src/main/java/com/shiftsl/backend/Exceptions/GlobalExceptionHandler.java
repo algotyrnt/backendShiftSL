@@ -124,4 +124,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler({ShiftRetrievalException.class})
+    public ResponseEntity<Object> handleShiftRetrievalException(ShiftRetrievalException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
+    }
 }
