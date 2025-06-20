@@ -65,7 +65,7 @@ public class ShiftService {
             logger.info("Getting available shifts");
             return shiftRepo.findAvailableShifts();
         } catch (Exception e) {
-            logger.error("Unable to retrieve available shifts.");
+            logger.warn("Unable to retrieve available shifts.");
             throw new ShiftRetrievalException("Error occurred while trying to retrieve available shifts from database");
         }
     }
@@ -73,6 +73,7 @@ public class ShiftService {
     // Doctor claims a shift from the shift pool
     @Transactional
     public void claimShift(Long doctorId, Long shiftId) {
+        String lockErrorMessage = null;
         try {
             logger.info("Claiming shift " + shiftId);
             Shift shift = getShiftWithLock(shiftId);
@@ -92,10 +93,22 @@ public class ShiftService {
             shiftRepo.save(shift);
         } catch (LockTimeoutException | PessimisticLockException e) {
             logger.error("Too many threads are trying to claim shift.");
-            throw new ShiftClaimFailedException("System is experiencing high load. Please try again later."+ e);
+            lockErrorMessage = "System is experiencing high load. Please try again later. " + e.getMessage();
+            throw new ShiftClaimFailedException(lockErrorMessage);
         } catch (Exception e) {
             logger.error("Error occurred while trying to store shift {} for doctor {} in database", shiftId, doctorId);
-            throw new ShiftClaimFailedException(String.format("Unable to claim shift %d for doctor %d", shiftId, doctorId));
+
+            String fullMessage = String.format(
+                    "Unable to claim shiftId: %d for doctorId: %d", shiftId, doctorId
+            );
+
+            if (lockErrorMessage != null) {
+                fullMessage += ". " + lockErrorMessage;
+            } else {
+                fullMessage += ". " + e.getMessage();
+            }
+
+            throw new ShiftClaimFailedException(fullMessage);
         }
     }
 
@@ -103,7 +116,7 @@ public class ShiftService {
     public Shift getShiftByID(Long shiftID){
         logger.info("Retrieving Shift '{}' from database", shiftID);
         return shiftRepo.findById(shiftID).orElseThrow(() -> {
-            logger.error("Unable to find shift with ID " + shiftID);
+            logger.warn("Unable to find shift with ID {}", shiftID);
             return new ShiftNotFoundException("Shift ID - (" + shiftID + ") not found.");
         });
     }
@@ -112,7 +125,7 @@ public class ShiftService {
     public Shift getShiftWithLock(Long shiftID){
         logger.info("Retrieving Shift {} with pessimistic lock", shiftID);
         return shiftRepo.findShiftWithLock(shiftID).orElseThrow(() -> {
-            logger.error("Unable to find shift with locking implemented for ID " + shiftID);
+            logger.warn("Unable to find shift with locking implemented for ID {}", shiftID);
             return new ShiftNotFoundException("Shift ID - (" + shiftID + ") not found.");
         });
     }
@@ -123,7 +136,7 @@ public class ShiftService {
         userService.getUserById(doctorId); //check whether the doctor exists or else throws UserNotFoundException
         List<Shift> shifts = shiftRepo.findByDoctors_Id(doctorId);
         if (shifts.isEmpty()) {
-            logger.info("No shift found for doctor " + doctorId);
+            logger.warn("No shift found for doctor {}", doctorId);
             throw new ShiftsNotFoundException("No shifts found for doctor with ID " + doctorId);
         }
         return shifts;
@@ -185,7 +198,7 @@ public class ShiftService {
 
             return shiftRepo.findByStartTimeBetween(startDateTime, endDateTime);
         } catch (Exception e) {
-            logger.error("Error occurred while trying to retrieve roster for month " + month);
+            logger.error("Error occurred while trying to retrieve roster for month {}", month);
             throw  new ShiftsNotFoundException("Unable to retrieve shifts for the given month from database");
         }
 
