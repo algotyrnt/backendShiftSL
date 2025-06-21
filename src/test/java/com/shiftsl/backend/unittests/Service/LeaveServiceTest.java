@@ -12,6 +12,8 @@ import com.shiftsl.backend.repo.LeaveRepo;
 import com.shiftsl.backend.unittests.Extensions.TimingExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(TimingExtension.class)
 @ExtendWith(MockitoExtension.class)
+@Execution(ExecutionMode.CONCURRENT)
 public class LeaveServiceTest {
 
     @InjectMocks
