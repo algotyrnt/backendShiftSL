@@ -48,7 +48,6 @@ public class LeaveServiceTest {
     @Mock
     private LeaveDTO testLeaveDTO;
 
-//    private ArgumentCaptor<Leave> captor = ArgumentCaptor.forClass(Leave.class);
     private ArgumentCaptor<Leave> captor;
 
     private static final Long ID = 123456L;
@@ -130,7 +129,7 @@ public class LeaveServiceTest {
         when(shiftService.getShiftByID(ID)).thenReturn(testShift);
         when(leaveRepo.save(any(Leave.class))).thenReturn(testLeave);
 
-        Leave result = underTest.requestLeave(testLeaveDTO);
+        underTest.requestLeave(testLeaveDTO);
 
         verify(leaveRepo).save(captor.capture());
         verify(userService).getUserById(ID);
@@ -163,7 +162,6 @@ public class LeaveServiceTest {
 
     @Test
     void rejectTest() {
-//        ArgumentCaptor<Leave> captor = ArgumentCaptor.forClass(Leave.class);
         when(leaveRepo.findById(ID)).thenReturn(Optional.of(testLeave));
         when(leaveRepo.save(any(Leave.class))).thenReturn(testLeave);
         String result = underTest.reject(ID);
@@ -188,7 +186,6 @@ public class LeaveServiceTest {
     @Order(2)
     void approveTest() {
         testShift = Mockito.mock(Shift.class);
-//        ArgumentCaptor<Leave> captor = ArgumentCaptor.forClass(Leave.class);
         when(shiftService.getShiftWithLock(2L)).thenReturn(testShift);
         when(testShift.getDoctors()).thenReturn(testDoctors);
         when(shiftService.updateShiftByID(testShift)).thenReturn(testShift);
