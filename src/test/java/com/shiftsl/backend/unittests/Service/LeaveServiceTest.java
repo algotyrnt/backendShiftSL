@@ -2,6 +2,7 @@ package com.shiftsl.backend.unittests.Service;
 
 import com.google.firebase.database.DatabaseException;
 import com.shiftsl.backend.DTO.LeaveDTO;
+import com.shiftsl.backend.Exceptions.LeaveNotFoundException;
 import com.shiftsl.backend.Exceptions.LeaveNotSavedException;
 import com.shiftsl.backend.Exceptions.LeaveRetrievalException;
 import com.shiftsl.backend.Service.LeaveService;
@@ -159,8 +160,16 @@ public class LeaveServiceTest {
     @Test
     void getLeaveTest() {
         when(leaveRepo.findById(ID)).thenReturn(Optional.ofNullable(testLeave));
-        underTest.getLeave(ID);
+        Leave result = underTest.getLeave(ID);
         verify(leaveRepo).findById(ID);
+        assertEquals(testLeave, result);
+    }
+
+    @Test
+    void getLeaveExceptionTest() {
+        when(leaveRepo.findById(ID)).thenReturn(Optional.empty());
+        Exception ex = assertThrows(LeaveNotFoundException.class,() -> underTest.getLeave(ID));
+        assertEquals("User - (" + ID + ") not found.", ex.getMessage());
     }
 
     @Test
@@ -179,9 +188,10 @@ public class LeaveServiceTest {
 
     @Test
     void rejectExceptionTest() {
-        when(leaveRepo.findById(ID)).thenThrow(new DatabaseException("Unable to access the database"));
+        when(leaveRepo.findById(ID)).thenThrow(new RuntimeException());
+        Exception e = assertThrows(LeaveNotSavedException.class,() -> underTest.reject(ID));
         verify(leaveRepo, never()).save(testLeave); // verify that the leave object was never saved to database
-        Exception e = assertThrows(LeaveNotSavedException.class,() -> underTest.approve(ID));
+        verify(leaveRepo).findById(ID);
         assertEquals(String.format("Failed to update leave status in database for leaveId=%d", ID), e.getMessage());
     }
 
