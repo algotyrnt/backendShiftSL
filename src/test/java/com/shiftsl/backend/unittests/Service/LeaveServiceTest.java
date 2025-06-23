@@ -43,13 +43,9 @@ public class LeaveServiceTest {
     @Mock
     private ShiftService shiftService;
 
-    @Mock
     private User testDoctor;
-    @Mock
     private Shift testShift;
-    @Mock
     private Leave testLeave;
-    @Mock
     private LeaveDTO testLeaveDTO;
 
     private ArgumentCaptor<Leave> captor;

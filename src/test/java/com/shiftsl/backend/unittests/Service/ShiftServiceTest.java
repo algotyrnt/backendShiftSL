@@ -48,11 +48,8 @@ public class ShiftServiceTest {
 
     private final Long id = 1L;
 
-    @Mock
     private static Shift testShift;
-    @Mock
     private static Ward testWard;
-    @Mock
     private static User testDoctor;
 
     private static Set<Long> doctorIds;
