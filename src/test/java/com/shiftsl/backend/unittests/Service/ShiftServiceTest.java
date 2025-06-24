@@ -162,6 +162,20 @@ public class ShiftServiceTest {
     }
 
     @Test
+    void claimShiftDoctorCountExceededExceptionTest() {
+        Shift badShift = new Shift();
+        badShift.setNoOfDoctors(10);
+        badShift.setTotalDoctors(10);
+        when(shiftRepo.findShiftWithLock(id)).thenReturn(Optional.of(badShift));
+        when(userService.getUserById(id)).thenReturn(testDoctor);
+        Exception ex = assertThrows(ShiftClaimFailedException.class, () -> underTest.claimShift(id, id));
+        verify(shiftRepo).findShiftWithLock(id);
+        verify(userService).getUserById(id);
+        verify(shiftRepo, never()).save(any(Shift.class));
+        assertEquals("Unable to claim shiftId: " + id + " for doctorId: " + id + ". Number of assigned doctors exceeds the allowed limit.", ex.getMessage());
+    }
+
+    @Test
     void claimShiftGeneralExceptionTest() {
         when(shiftRepo.findShiftWithLock(id)).thenThrow(new TransactionalException("Error while trying to retrieve shift details from database", new SQLException()));
 
@@ -287,7 +301,13 @@ public class ShiftServiceTest {
     @Test
     void getRosterTest() {
         when(shiftRepo.findByStartTimeBetween(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(shifts);
-        List<Shift> result = underTest.getRoster(2);
+        int month = 1;
+        if (LocalDateTime.now().getMonthValue() == 12) {
+            month = 12;
+        } else {
+            month = LocalDateTime.now().getMonthValue() + 1;
+        }
+        List<Shift> result = underTest.getRoster(month);
         verify(shiftRepo).findByStartTimeBetween(any(LocalDateTime.class), any(LocalDateTime.class));
         assertArrayEquals(shifts.toArray(), result.toArray());
     }
