@@ -2,6 +2,7 @@ package com.shiftsl.backend.unittests.Service;
 
 import com.google.firebase.database.DatabaseException;
 import com.shiftsl.backend.DTO.LeaveDTO;
+import com.shiftsl.backend.Exceptions.LeaveNotFoundException;
 import com.shiftsl.backend.Exceptions.LeaveNotSavedException;
 import com.shiftsl.backend.Exceptions.LeaveRetrievalException;
 import com.shiftsl.backend.Service.LeaveService;
@@ -12,6 +13,8 @@ import com.shiftsl.backend.repo.LeaveRepo;
 import com.shiftsl.backend.unittests.Extensions.TimingExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +31,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(TimingExtension.class)
 @ExtendWith(MockitoExtension.class)
+@Execution(ExecutionMode.CONCURRENT)
 public class LeaveServiceTest {
 
     @InjectMocks
@@ -39,13 +43,9 @@ public class LeaveServiceTest {
     @Mock
     private ShiftService shiftService;
 
-    @Mock
     private User testDoctor;
-    @Mock
     private Shift testShift;
-    @Mock
     private Leave testLeave;
-    @Mock
     private LeaveDTO testLeaveDTO;
 
     private ArgumentCaptor<Leave> captor;
@@ -156,8 +156,16 @@ public class LeaveServiceTest {
     @Test
     void getLeaveTest() {
         when(leaveRepo.findById(ID)).thenReturn(Optional.ofNullable(testLeave));
-        underTest.getLeave(ID);
+        Leave result = underTest.getLeave(ID);
         verify(leaveRepo).findById(ID);
+        assertEquals(testLeave, result);
+    }
+
+    @Test
+    void getLeaveExceptionTest() {
+        when(leaveRepo.findById(ID)).thenReturn(Optional.empty());
+        Exception ex = assertThrows(LeaveNotFoundException.class,() -> underTest.getLeave(ID));
+        assertEquals("User - (" + ID + ") not found.", ex.getMessage());
     }
 
     @Test
@@ -176,9 +184,10 @@ public class LeaveServiceTest {
 
     @Test
     void rejectExceptionTest() {
-        when(leaveRepo.findById(ID)).thenThrow(new DatabaseException("Unable to access the database"));
+        when(leaveRepo.findById(ID)).thenThrow(new RuntimeException());
+        Exception e = assertThrows(LeaveNotSavedException.class,() -> underTest.reject(ID));
         verify(leaveRepo, never()).save(testLeave); // verify that the leave object was never saved to database
-        Exception e = assertThrows(LeaveNotSavedException.class,() -> underTest.approve(ID));
+        verify(leaveRepo).findById(ID);
         assertEquals(String.format("Failed to update leave status in database for leaveId=%d", ID), e.getMessage());
     }
 

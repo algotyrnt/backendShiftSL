@@ -27,28 +27,23 @@ public class UserService {
 
     @Transactional
     public User registerUser(UserDTO userDTO) {
-        try {
-            logger.info("Checking if user is already registered with given phone number");
-            userRepo.findByPhoneNo(userDTO.phoneNo()).ifPresent(user -> {
-                throw new PhoneAlreadyInUseException("Phone Number already in use.");
-            });
+        logger.info("Checking if user is already registered with given phone number");
+        userRepo.findByPhoneNo(userDTO.phoneNo()).ifPresent(user -> {
+            throw new PhoneAlreadyInUseException("Phone Number already in use.");
+        });
 
-            logger.info("Creating User object for User {} {}, and number {}", userDTO.firstName(), userDTO.lastName(), userDTO.phoneNo());
-            User user = new User();
-            user.setFirstName(userDTO.firstName());
-            user.setLastName(userDTO.lastName());
-            user.setSlmcReg(userDTO.slmcReg());
-            user.setFirebaseUid(firebaseAuthService.createUser(userDTO.email()));
-            user.setEmail(userDTO.email());
-            user.setPhoneNo(userDTO.phoneNo());
-            user.setRole(userDTO.role());
+        logger.info("Creating User object for User {} {}, and number {}", userDTO.firstName(), userDTO.lastName(), userDTO.phoneNo());
+        User user = new User();
+        user.setFirstName(userDTO.firstName());
+        user.setLastName(userDTO.lastName());
+        user.setSlmcReg(userDTO.slmcReg());
+        user.setFirebaseUid(firebaseAuthService.createUser(userDTO.email()));
+        user.setEmail(userDTO.email());
+        user.setPhoneNo(userDTO.phoneNo());
+        user.setRole(userDTO.role());
 
-            logger.info("Registering User with phone number: {}", user.getPhoneNo());
-            return userRepo.save(user);
-        } catch (Exception e) {
-            logger.error("Unable to save user to database", e);
-            throw new AccountNotCreatedException("Unable to register the current user");
-        }
+        logger.info("Registering User with phone number: {}", user.getPhoneNo());
+        return userRepo.save(user);
     }
 
     @Transactional

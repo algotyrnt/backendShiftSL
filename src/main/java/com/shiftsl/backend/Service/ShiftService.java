@@ -73,7 +73,7 @@ public class ShiftService {
     // Doctor claims a shift from the shift pool
     @Transactional
     public void claimShift(Long doctorId, Long shiftId) {
-        String lockErrorMessage = null;
+        String errorMessage = null;
         try {
             logger.info("Claiming shift " + shiftId);
             Shift shift = getShiftWithLock(shiftId);
@@ -82,7 +82,9 @@ public class ShiftService {
             int sizeD = shift.getNoOfDoctors();
 
             if (sizeD >= shift.getTotalDoctors()) {
-                throw new DoctorCountExceededException("Number of assigned doctors exceeds the allowed limit.");
+                logger.error("Number of doctors is greater than total number of doctors allowed");
+                errorMessage = "Number of assigned doctors exceeds the allowed limit.";
+                throw new DoctorCountExceededException(errorMessage);
             }
 
             Set<User> doctors = shift.getDoctors();
@@ -93,8 +95,8 @@ public class ShiftService {
             shiftRepo.save(shift);
         } catch (LockTimeoutException | PessimisticLockException e) {
             logger.error("Too many threads are trying to claim shift.");
-            lockErrorMessage = "System is experiencing high load. Please try again later. " + e.getMessage();
-            throw new ShiftClaimFailedException(lockErrorMessage);
+            errorMessage = "System is experiencing high load. Please try again later. " + e.getMessage();
+            throw new ShiftClaimFailedException(errorMessage);
         } catch (Exception e) {
             logger.error("Error occurred while trying to store shift {} for doctor {} in database", shiftId, doctorId);
 
@@ -102,8 +104,8 @@ public class ShiftService {
                     "Unable to claim shiftId: %d for doctorId: %d", shiftId, doctorId
             );
 
-            if (lockErrorMessage != null) {
-                fullMessage += ". " + lockErrorMessage;
+            if (errorMessage != null) {
+                fullMessage += ". " + errorMessage;
             } else {
                 fullMessage += ". " + e.getMessage();
             }
