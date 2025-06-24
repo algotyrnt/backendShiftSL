@@ -69,17 +69,6 @@ public class ShiftSwapServiceTest {
 
     @BeforeAll
     static void setUp() {
-//        doctorIds = new HashSet<>(Set.of(
-//                1L
-//        ));
-
-//        doctors = new HashSet<>(Set.of(
-//                new User()
-//        ));
-
-//        shiftSwaps = new ArrayList<>(List.of(
-//                new ShiftSwap()
-//        ));
         testWard = new Ward();
         testDoctor = new User(); testDoctor.setId(1L);
 
